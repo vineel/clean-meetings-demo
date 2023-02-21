@@ -1,5 +1,3 @@
-// require('amazon-chime-sdk-js');
-
 import {isVideoTransformDevice} from 'amazon-chime-sdk-js';
 import {join} from './chimeFunctions';
 

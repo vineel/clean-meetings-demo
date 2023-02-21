@@ -23,6 +23,6 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "amazon-chime-sdk-js": "^3.11.0"
+    "amazon-chime-sdk-js": "/Users/vineel/chimedev/fork/amazon-chime-sdk-js/"
   }
 }
