@@ -57,12 +57,14 @@ export class MeetingManager {
 
     const configuration = this.meetingInfo.configuration;
 
+    // this represents the audio and video devices on the local computer
     this.deviceController = new ChimeSDK.DefaultDeviceController(
       this.logger,
       { enableWebAudio: true }
     );
     console.log("deviceController:", this.deviceController);
 
+    // this represents the whole running meeting, but doesn't start it yet
     this.meetingSession = new ChimeSDK.DefaultMeetingSession(
       configuration,
       this.logger,
@@ -75,7 +77,7 @@ export class MeetingManager {
     );
     console.log("meetingSession:", this.meetingSession);
 
-    // save the primary interface to start/stop the meeting
+    // save the primary interface to start/stop the meeting (for convenience)
     this.audioVideo = this.meetingSession.audioVideo;
 
     // get a video device and configure it
@@ -83,13 +85,17 @@ export class MeetingManager {
     await this.audioVideo.chooseVideoInputQuality(960, 540, 15); // 960w 540h 15fps
     await this.audioVideo.setVideoMaxBandwidthKbps(1400);
 
+
     // get the object that manages the Video Grid UI
     const videoTileMgr: Object = this.videoGridManager();
     //add it to the meeting
     this.audioVideo.addObserver(videoTileMgr);
 
+    
     // start the input coming from the video device, doesn't show it onscreen yet
     await this.audioVideo.startVideoInput(firstVideoInputDevice.deviceId);
+
+    // this will start the audio and video input devices
     this.audioVideo.start();
     this.audioVideo.startLocalVideoTile();
 
@@ -115,14 +121,15 @@ export class MeetingManager {
       },
 
       audioVideoDidStop: async (sessionStatus: any) => {
-        console.log("audioVideoDidSTOP");
         await this.audioVideo?.stopVideoInput();
       },
 
       videoTileDidUpdate: (tileState: any) => {
         console.log("videoTileUpdated!", tileState);
         if (tileState.localTile) {
-          //todo What is a local tile? Is that the "me" video?
+          // This is a "local tile" which means it's coming from the camera on the local computer
+          // You might label this "Me" or "Looking in a mirror"
+          // Note: This Video is flipped -- if you see hold up a book, the letters will appear reversed
           const localVideoEl: HTMLVideoElement = document.getElementById('video-local') as HTMLVideoElement;
           this.audioVideo.bindVideoElement(tileState.tileId, localVideoEl);
         } else {
@@ -137,12 +144,14 @@ export class MeetingManager {
             videoTileElement.style.height = '100%';
             parentDiv.appendChild(videoTileElement);
           }
+          const tileEl = document.getElementById(tileState.tileId) as HTMLVideoElement; // whether just created above or pre-existing
+          this.audioVideo.bindVideoElement(tileState.tileId, tileEl);
+
         }
       },
 
       videoTileWasRemoved: (tileId: any) => {
-        // tileId is the id of a DOM element that shows 1 video participant
-        // that we added in videoTileDidUpdate
+        // tileId is the id of a DOM element that shows 1 video participant, added in "videoTileDidUpdate"
         const videoElementRemoved = document.getElementById(tileId);
         videoElementRemoved.remove();
       }
@@ -150,56 +159,3 @@ export class MeetingManager {
     return observer;
   }
 }
-
-
-/*
-  meetingSession.audioVideo.bindVideoElement(tileState.tileId, videoElementNew);
-    When done with preview
-
-
-
-    document.getElementById('form-devices').addEventListener('submit', e => {
-      e.preventDefault();
-      AsyncScheduler.nextTick(async () => {
-        try {
-          this.showProgress('progress-join');
-          await this.stopAudioPreview();
-          await this.openVideoInputFromSelection(null, true);
-          // stopVideoProcessor should be called before join; it ensures that state variables and video processor stream are cleaned / removed before joining the meeting.
-          // If stopVideoProcessor is not called then the state from preview screen will be carried into the in meeting experience and it will cause undesired side effects.
-          await this.stopVideoProcessor();
-          await this.join();
-          this.hideProgress('progress-join');
-          this.displayButtonStates();
-          this.switchToFlow('flow-meeting');
-
-        } catch (error) {
-          document.getElementById('failed-join').innerText = `Meeting ID: ${this.meeting}`;
-          document.getElementById('failed-join-error').innerText = `Error: ${error.message}`;
-        }
-      });
-    });
-
-
-    const buttonVideo = document.getElementById('button-camera');
-    buttonVideo.addEventListener('click', _e => {
-      AsyncScheduler.nextTick(async () => {
-        if (this.toggleButton('button-camera') === 'on' && this.canStartLocalVideo) {
-          try {
-            let camera: string | null = this.selectedVideoInput;
-            if (camera === null || camera === 'None') {
-              camera = this.cameraDeviceIds.length ? this.cameraDeviceIds[0] : 'None';
-            }
-            await this.openVideoInputFromSelection(camera, false);
-            this.audioVideo.startLocalVideoTile();
-          } catch (err) {
-            this.toggleButton('button-camera', 'off')
-            fatal(err);
-          }
-        } else {
-          await this.audioVideo.stopVideoInput();
-          this.toggleButton('button-camera', 'off');
-        }
-      });
-    });
-*/

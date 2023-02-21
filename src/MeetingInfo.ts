@@ -1,6 +1,9 @@
 import * as ChimeSDK from 'amazon-chime-sdk-js';
 
 
+/*
+    This class encapsulates the meeting and attendee info from the server
+*/
 
 export class MeetingInfo {
     meetingInfoApiEndpoint: string;
