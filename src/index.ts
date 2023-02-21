@@ -1,5 +1,6 @@
 import {isVideoTransformDevice} from 'amazon-chime-sdk-js';
 import {join} from './chimeFunctions';
+import {MeetingInfo, UserInterface} from "./Meeting";
 
 /*
     webpack setup from 
@@ -8,24 +9,13 @@ import {join} from './chimeFunctions';
 console.log("This is my TypeScript entrypoint, dude!");
 console.log("isVideoTransformDevice: ", isVideoTransformDevice(0));
 
-const myFunc = (msg: string) : string => {
-    return msg + " .... dude.";
-}
 
-console.log("this is my the return from myFunc");
 
-function joinMeeting(): string {
-    join();
-
-    console.log("Done done done done!");
-    return "Done done done done!";
-}
-
+const userInterface:UserInterface = new UserInterface();
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Hello World!");
 
-    let btn = document.getElementById('join-button');
-    console.log("button: ", btn);
-    btn.onclick = function(){ joinMeeting() }; 
+
+    userInterface.attachEventListeners(document);
 });

@@ -1,5 +1,75 @@
 body {
     font-family: Helvetica, Arial;
-    font-size:24px;
+    font-size: 24px;
     background-color: #aaa;
+}
+
+input {
+    padding: 4px;
+    font-size: 14px
+}
+
+h1 {
+    font-size: 20px;
+}
+
+h2 {
+    font-size: 14px;
+}
+
+.graybox {
+    background-color: #aaa;
+    margin: auto
+}
+
+.top {
+    grid-area: header;
+    border-bottom: 1px solid #000;
+}
+
+.chime-meeting {
+    display: grid;
+    grid-template-areas:
+        'header header'
+        'menu main'
+        'menu main';
+    border: 1px solid #aaa;
+    border-bottom: 1px solid #000;
+    justify-items: stretch;
+}
+
+.chime-meeting>div {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+}
+
+.chime-meeting>.leftcol {
+    grid-area: menu;
+    border-right: 1px solid #aaa;
+}
+
+.chime-meeting>.content {
+    background-color: #eee;
+}
+
+.videoTiles {
+    width: 450px;
+    height: 400px;
+    background-color: #aaa;
+    margin: 0 auto 0 auto;
+}
+
+.localVideo {
+    width: 200px;
+    height: 200px;
+    background-color: #fff;
+    margin: 0 auto 0 auto;
+}
+
+table.details {
+    width: 100%;
+    font-size: 20px;
+    color: #fff;
+    border: 1px solid #ddd;
 }
