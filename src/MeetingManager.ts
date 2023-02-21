@@ -12,6 +12,14 @@ export class MeetingManager {
         this.meetingInfo = new MeetingInfo(meetingInfoApiEndpoint);
     }
 
+    getInfo(): Object {
+        return {
+            meetingId: this.meetingInfo?.getMeetingId(),
+            externalMeetingId: this.meetingInfo.getExternalMeetingId(),
+            attendeeId: this.meetingInfo?.getAttendeeId()
+        }
+    }
+
     async initialize(meetingId: string): Promise<void> {
         this.logger = new ChimeSDK.ConsoleLogger('Log');
         await this.meetingInfo.getOrCreateMeetingWithAttendee(meetingId);

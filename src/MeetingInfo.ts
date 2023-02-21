@@ -28,6 +28,18 @@ export class MeetingInfo {
         return this.configuration;
     }
 
+    getExternalMeetingId():string {
+        return this.configuration?.meetingId;
+    }
+
+    getMeetingId(): string {
+        return this.configuration?.externalMeetingId;
+    }
+
+    getAttendeeId(): string {
+        return this.configuration?.credentials?.attendeeId;
+    }
+
     toString(): string {
         return JSON.stringify(this.meetingInfoApiEndpoint, null, 2);
     }

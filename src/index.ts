@@ -1,6 +1,6 @@
 import {isVideoTransformDevice} from 'amazon-chime-sdk-js';
 import {join} from './chimeFunctions';
-import { MeetingUserInterface } from "./MeetingUserInterface";
+import { attachEventListeners } from "./MeetingUserInterface";
 import { MeetingInfo } from "./MeetingInfo";
 
 /*
@@ -12,11 +12,9 @@ console.log("isVideoTransformDevice: ", isVideoTransformDevice(0));
 
 
 
-const userInterface:MeetingUserInterface = new MeetingUserInterface();
+// const userInterface:MeetingUserInterface = new MeetingUserInterface();
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Hello World!");
-
-
-    userInterface.attachEventListeners(document);
+    console.log("DOMContentLoaded, attaching event listeners");
+    attachEventListeners();
 });

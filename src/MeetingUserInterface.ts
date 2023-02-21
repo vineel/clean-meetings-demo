@@ -1,22 +1,26 @@
 import { MeetingManager } from './MeetingManager';
 
 export const MeetingInfoEndpoint: string = 'https://i38eaxbmk2.execute-api.us-east-1.amazonaws.com/Prod/meeting';
+const meetingManager:MeetingManager = new MeetingManager(MeetingInfoEndpoint);
 
 
-export class MeetingUserInterface {
-    meetingManager: MeetingManager;
+const updateUserInterface = () => {
+    const data: any = meetingManager?.getInfo();
+    document.getElementById('meeting-id').innerText = data.meetingId;
+    document.getElementById('external-meeting-id').innerText = data.externalMeetingId;
+    document.getElementById('attendee-id').innerText = data.attendeeId;
 
-    constructor() {
-        this.meetingManager = new MeetingManager(MeetingInfoEndpoint);
-    }
+}
 
-    async joinClick(e: Event): Promise<void> {
-        console.log("join click!");
-        const meetingId: string = "test123"; //todo get this from field or querystr
-        this.meetingManager.initialize(meetingId);
-    }
+const joinClick = async (e: Event): Promise<void> => {
+    console.log("join click!");
+    const meetingId: string = "test123"; //todo get this from field or querystr
+    await meetingManager.initialize(meetingId);
+    updateUserInterface();
+    return null;
+}
 
-    async attachEventListeners(doc: Document): Promise<void> {
-        doc.getElementById('join-button').addEventListener('click', async (e: Event): Promise<void> => this.joinClick(e));
-    }
+export const attachEventListeners = async (): Promise<void> => {
+    document.getElementById('join-button').addEventListener('click', joinClick);
+    return null;
 }
