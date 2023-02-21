@@ -3,13 +3,19 @@ import { MeetingInfo } from './MeetingInfo';
 
 
 
+/*
+  MeetingManager runs the meeting.
+  1. Registers with the "meeting" on the server
+  2. Sets up audio and video devices on this computer, attaches them to the meeting session. Chooses the first webcam for convenience.
+  3. Responds to the user starting/stopping media.
+*/
 
 export class MeetingManager {
     meetingInfo: MeetingInfo;
     logger: ChimeSDK.Logger;
     deviceController: ChimeSDK.DefaultDeviceController | undefined = undefined;
     meetingSession: ChimeSDK.MeetingSession | undefined = undefined;
-    eventReporter: ChimeSDK.EventReporter | undefined = undefined;
+    // eventReporter: ChimeSDK.EventReporter | undefined = undefined;
     audioVideo: ChimeSDK.AudioVideoFacade | null = null;
     previewVideoElement: HTMLVideoElement | null = null;
 
@@ -64,24 +70,26 @@ export class MeetingManager {
             new ChimeSDK.DefaultEventController(
                 configuration,
                 this.logger,
-                this.eventReporter // this is undefined bec I don't know how to use it
+                null // EventReporter
             )
         );
-        this.audioVideo = this.meetingSession.audioVideo;
         console.log("meetingSession:", this.meetingSession);
+        
+        // save the primary interface to start/stop the meeting
+        this.audioVideo = this.meetingSession.audioVideo;
 
+        // get a video device and configure it
         const firstVideoInputDevice = await this.getVideoDevice(0);
-        console.log("found firstVideoInputDevice: ", firstVideoInputDevice);
+        await this.audioVideo.chooseVideoInputQuality(960, 540, 15); // 960w 540h 15fps
+        await this.audioVideo.setVideoMaxBandwidthKbps(1400);
 
-        await this.meetingSession.audioVideo.chooseVideoInputQuality(960, 540, 15); // 540p 15fps
-        await this.meetingSession.audioVideo.setVideoMaxBandwidthKbps(1400);
-        await this.meetingSession.audioVideo.startVideoInput(firstVideoInputDevice.deviceId);
+        // start the input coming from the video device.
+        await this.audioVideo.startVideoInput(firstVideoInputDevice.deviceId);
     }
 
     async previewStart(videoElement: HTMLVideoElement):Promise<void> {
         this.previewVideoElement = videoElement;
         this.audioVideo?.startVideoPreviewForVideoInput(this.previewVideoElement);
-        console.log('video preview started')
     }
 
     async previewStop():Promise<void> {

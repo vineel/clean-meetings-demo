@@ -1,5 +1,9 @@
-import { MeetingManager } from './MeetingManager';
+/*
+    This file interfaces with the HTML to add event listeners and update the user interface elements on the page.
+*/
 
+
+import { MeetingManager } from './MeetingManager';
 export const MeetingInfoEndpoint: string = 'https://i38eaxbmk2.execute-api.us-east-1.amazonaws.com/Prod/meeting';
 const meetingManager:MeetingManager = new MeetingManager(MeetingInfoEndpoint);
 
