@@ -61,11 +61,20 @@ h2 {
 }
 
 .localVideo {
-    width: 200px;
-    height: 200px;
+    width: 400px;
+    /* height: 200px; */
     background-color: #fff;
     margin: 0 auto 0 auto;
 }
+
+.localVideo video {
+    width: 400px;
+}
+
+.localVideoPlaying {
+    background-color: transparent;
+}
+
 
 table.details {
     width: 100%;

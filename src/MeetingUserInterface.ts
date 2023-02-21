@@ -4,13 +4,20 @@ export const MeetingInfoEndpoint: string = 'https://i38eaxbmk2.execute-api.us-ea
 const meetingManager:MeetingManager = new MeetingManager(MeetingInfoEndpoint);
 
 
-const updateUserInterface = () => {
-    const data: any = meetingManager?.getInfo();
-    document.getElementById('meeting-id').innerText = data.meetingId;
-    document.getElementById('external-meeting-id').innerText = data.externalMeetingId;
-    document.getElementById('attendee-id').innerText = data.attendeeId;
-
+/*
+    adds event listeners to the UI elements
+*/
+export const attachEventListeners = async (): Promise<void> => {
+    document.getElementById('join-button').addEventListener('click', joinClick);
+    document.getElementById('preview-on-button').addEventListener('click', previewStartClick);
+    document.getElementById('preview-off-button').addEventListener('click', previewStopClick);
+    return null;
 }
+
+
+/*
+    Response handlers for the UI elements
+*/
 
 const joinClick = async (e: Event): Promise<void> => {
     console.log("join click!");
@@ -20,7 +27,32 @@ const joinClick = async (e: Event): Promise<void> => {
     return null;
 }
 
-export const attachEventListeners = async (): Promise<void> => {
-    document.getElementById('join-button').addEventListener('click', joinClick);
-    return null;
+const previewStartClick = async(e:Event): Promise<void> => {
+    document.getElementById("local-video").classList.add("localVideoOn");
+
+    const previewVideoElement: HTMLVideoElement = document.getElementById('video-preview') as HTMLVideoElement;
+    await meetingManager?.previewStart(previewVideoElement);
+    updateUserInterface();
+}
+
+const previewStopClick = async(e:Event): Promise<void> => {
+    await meetingManager?.previewStop();
+    updateUserInterface();
+}
+
+
+/*
+    gets state information about the meeting
+    updates the user interface to reflect that state
+*/
+const updateUserInterface = () => {
+    const data: any = meetingManager?.getInfo();
+    document.getElementById('meeting-id').innerText = data.meetingId;
+    document.getElementById('external-meeting-id').innerText = data.externalMeetingId;
+    document.getElementById('attendee-id').innerText = data.attendeeId;
+    if (data.previewIsOn) {
+        document.getElementById("local-video").classList.add("localVideoPlaying");
+    } else {
+        document.getElementById("local-video").classList.remove("localVideoPlaying");
+    }
 }
