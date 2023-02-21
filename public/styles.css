@@ -67,7 +67,16 @@ h2 {
     margin: 0 auto 0 auto;
 }
 
+.localVideo2 {
+    width: 400px;
+    height: 200px;
+    background-color: #fff;
+    margin: 0 auto 0 auto;
+}
 .localVideo video {
+    width: 400px;
+}
+.localVideo2 video {
     width: 400px;
 }
 

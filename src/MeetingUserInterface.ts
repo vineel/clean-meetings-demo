@@ -32,7 +32,7 @@ const joinClick = async (e: Event): Promise<void> => {
 }
 
 const previewStartClick = async(e:Event): Promise<void> => {
-    document.getElementById("local-video").classList.add("localVideoOn");
+    document.getElementById("preview-video-container").classList.add("localVideoOn");
 
     const previewVideoElement: HTMLVideoElement = document.getElementById('video-preview') as HTMLVideoElement;
     await meetingManager?.previewStart(previewVideoElement);
@@ -55,8 +55,8 @@ const updateUserInterface = () => {
     document.getElementById('external-meeting-id').innerText = data.externalMeetingId;
     document.getElementById('attendee-id').innerText = data.attendeeId;
     if (data.previewIsOn) {
-        document.getElementById("local-video").classList.add("localVideoPlaying");
+        document.getElementById("preview-video-container").classList.add("localVideoPlaying");
     } else {
-        document.getElementById("local-video").classList.remove("localVideoPlaying");
+        document.getElementById("preview-video-container").classList.remove("localVideoPlaying");
     }
 }
