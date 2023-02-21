@@ -1,6 +1,7 @@
 import {isVideoTransformDevice} from 'amazon-chime-sdk-js';
 import {join} from './chimeFunctions';
-import {MeetingInfo, UserInterface} from "./Meeting";
+import { MeetingUserInterface } from "./MeetingUserInterface";
+import { MeetingInfo } from "./MeetingInfo";
 
 /*
     webpack setup from 
@@ -11,7 +12,7 @@ console.log("isVideoTransformDevice: ", isVideoTransformDevice(0));
 
 
 
-const userInterface:UserInterface = new UserInterface();
+const userInterface:MeetingUserInterface = new MeetingUserInterface();
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Hello World!");
