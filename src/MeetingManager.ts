@@ -51,6 +51,8 @@ export class MeetingManager {
       does this minimum needed to start a meeting with video
   */
   async initialize(meetingId: string): Promise<void> {
+    debugger;
+
     this.logger = new ChimeSDK.ConsoleLogger('Log');
     await this.meetingInfo.getOrCreateMeetingWithAttendee(meetingId);
     console.log("data:", this.meetingInfo.configuration);
@@ -82,8 +84,8 @@ export class MeetingManager {
 
     // get a video device and configure it
     const firstVideoInputDevice = await this.getVideoDevice(0);
-    await this.audioVideo.chooseVideoInputQuality(960, 540, 15); // 960w 540h 15fps
-    await this.audioVideo.setVideoMaxBandwidthKbps(1400);
+    this.audioVideo.chooseVideoInputQuality(960, 540, 15); // 960w 540h 15fps
+    this.audioVideo.setVideoMaxBandwidthKbps(1400);
 
 
     // get the object that manages the Video Grid UI
@@ -111,6 +113,10 @@ export class MeetingManager {
       await this.audioVideo.stopVideoPreviewForVideoInput(this.previewVideoElement);
       this.previewVideoElement = null;
     }
+  }
+
+  async blurStart(): Promise<void> {
+    console.log("blur start!");
   }
 
   videoGridManager(): Object {

@@ -15,7 +15,7 @@ export const attachEventListeners = async (): Promise<void> => {
     document.getElementById('join-button').addEventListener('click', joinClick);
     document.getElementById('preview-on-button').addEventListener('click', previewStartClick);
     document.getElementById('preview-off-button').addEventListener('click', previewStopClick);
-    return null;
+    document.getElementById('blur-on-button').addEventListener('click', blurOnClick);
 }
 
 
@@ -28,7 +28,6 @@ const joinClick = async (e: Event): Promise<void> => {
     const meetingId: string = "test123"; //todo get this from field or querystr
     await meetingManager.initialize(meetingId);
     updateUserInterface();
-    return null;
 }
 
 const previewStartClick = async(e:Event): Promise<void> => {
@@ -43,6 +42,11 @@ const previewStopClick = async(e:Event): Promise<void> => {
     await meetingManager?.previewStop();
     updateUserInterface();
 }
+
+const blurOnClick = async(e:Event): Promise<void> => {
+    await meetingManager?.blurStart();
+}
+
 
 
 /*
