@@ -17,6 +17,8 @@ export const attachEventListeners = async (): Promise<void> => {
     document.getElementById('preview-off-button').addEventListener('click', previewStopClick);
     document.getElementById('blur-on-button').addEventListener('click', blurOnClick);
     document.getElementById('blur-off-button').addEventListener('click', blurOffClick);
+    document.getElementById('replace-on-button').addEventListener('click', replaceOnClick);
+    document.getElementById('replace-off-button').addEventListener('click', replaceOffClick);
 }
 
 
@@ -50,6 +52,14 @@ const blurOnClick = async(e:Event): Promise<void> => {
 
 const blurOffClick = async(e:Event): Promise<void> => {
     await meetingManager?.blurStop();
+}
+
+const replaceOnClick = async(e:Event): Promise<void> => {
+    await meetingManager?.replaceStart();
+}
+
+const replaceOffClick = async(e:Event): Promise<void> => {
+    await meetingManager?.replaceStop();
 }
 
 

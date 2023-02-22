@@ -136,6 +136,25 @@ export class MeetingManager {
     await this.audioVideo.startVideoInput(this.originalVideoDeviceId);
   }
 
+  async replaceStart(): Promise<void> {
+    console.log("blur start!");
+    if (await ChimeSDK.BackgroundBlurVideoFrameProcessor.isSupported()) {
+      const blurProcessor = await ChimeSDK.BackgroundBlurVideoFrameProcessor.create();
+      const transformDevice = new ChimeSDK.DefaultVideoTransformDevice(this.logger, this.originalVideoDeviceId, [blurProcessor]);
+      this.transformVideoDevice = transformDevice;
+      await this.audioVideo.startVideoInput(transformDevice);
+    }
+  }
+
+  async replaceStop(): Promise<void> {
+    console.log("blur stop!");
+    if (this.transformVideoDevice) {
+      await this.transformVideoDevice.stop();
+      this.transformVideoDevice = null;
+    }
+    await this.audioVideo.startVideoInput(this.originalVideoDeviceId);
+  }
+
   videoGridManager(): Object {
     // return an object that responds to lifecycle events on the remote video
     const observer = {
