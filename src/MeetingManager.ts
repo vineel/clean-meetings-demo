@@ -1,4 +1,5 @@
 import * as ChimeSDK from 'amazon-chime-sdk-js';
+import { DefaultVideoTransformDevice } from 'amazon-chime-sdk-js';
 import { MeetingInfo } from './MeetingInfo';
 
 
@@ -18,6 +19,8 @@ export class MeetingManager {
   // eventReporter: ChimeSDK.EventReporter | undefined = undefined;
   audioVideo: ChimeSDK.AudioVideoFacade | null = null;
   previewVideoElement: HTMLVideoElement | null = null;
+  originalVideoDeviceId: string | null = null;
+  transformVideoDevice: DefaultVideoTransformDevice | null = null;
 
   constructor(meetingInfoApiEndpoint: string) {
     this.meetingInfo = new MeetingInfo(meetingInfoApiEndpoint);
@@ -51,8 +54,6 @@ export class MeetingManager {
       does this minimum needed to start a meeting with video
   */
   async initialize(meetingId: string): Promise<void> {
-    debugger;
-
     this.logger = new ChimeSDK.ConsoleLogger('Log');
     await this.meetingInfo.getOrCreateMeetingWithAttendee(meetingId);
     console.log("data:", this.meetingInfo.configuration);
@@ -83,7 +84,8 @@ export class MeetingManager {
     this.audioVideo = this.meetingSession.audioVideo;
 
     // get a video device and configure it
-    const firstVideoInputDevice = await this.getVideoDevice(0);
+    const firstVideoInputDevice:MediaDeviceInfo = await this.getVideoDevice(0);
+    this.originalVideoDeviceId = firstVideoInputDevice.deviceId;
     this.audioVideo.chooseVideoInputQuality(960, 540, 15); // 960w 540h 15fps
     this.audioVideo.setVideoMaxBandwidthKbps(1400);
 
@@ -117,6 +119,21 @@ export class MeetingManager {
 
   async blurStart(): Promise<void> {
     console.log("blur start!");
+    if (await ChimeSDK.BackgroundBlurVideoFrameProcessor.isSupported()) {
+      const blurProcessor = await ChimeSDK.BackgroundBlurVideoFrameProcessor.create();
+      const transformDevice = new ChimeSDK.DefaultVideoTransformDevice(this.logger, this.originalVideoDeviceId, [blurProcessor]);
+      this.transformVideoDevice = transformDevice;
+      await this.audioVideo.startVideoInput(transformDevice);
+    }
+  }
+
+  async blurStop(): Promise<void> {
+    console.log("blur stop!");
+    if (this.transformVideoDevice) {
+      await this.transformVideoDevice.stop();
+      this.transformVideoDevice = null;
+    }
+    await this.audioVideo.startVideoInput(this.originalVideoDeviceId);
   }
 
   videoGridManager(): Object {
