@@ -21,7 +21,8 @@
                 connect-src      'self' https://*.chime.aws wss://*.chime.aws https://*.amazonaws.com https://*.sdkassets.achime.aws wss://*.achime.aws https://*.sdkassets.bchime.aws wss://*.bchime.aws https://*.sdkassets.gchime.aws wss://*.gchime.aws https://*.sdkassets.chime.aws wss://*.chime.aws https://storage.googleapis.com https://*.ingest.gchime.aws;
                 script-src-elem  'self' 'unsafe-inline' https://*.sdkassets.achime.aws https://*.sdkassets.bchime.aws https://*.sdkassets.gchime.aws https://*.sdkassets.chime.aws https://cdn.jsdelivr.net;
                 worker-src       'self' blob:;
-                child-src        'self' blob:">
+                child-src        'self' blob:;
+                img-src        'self' blob:">
 
   </head>
 </head>
@@ -42,7 +43,7 @@
       <div><button id="blur-on-button">Legacy Blur On</button></div>
       <div><button id="blur-off-button">Legacy Blur Off</button></div>
       <div><button id="replace-on-button">Legacy Replacement On</button></div>
-      <div><button id="replace-off-button">Legacy Replacement On</button></div>
+      <div><button id="replace-off-button">Legacy Replacement Off</button></div>
       <div><button>Stop Video</button></div>
       <div><button>Mute Microphone</button></div>
     </div>
